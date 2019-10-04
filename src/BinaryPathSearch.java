@@ -15,8 +15,8 @@ public class BinaryPathSearch {
 
     public static void main(String[] args) {
         // Demo for 4 vertices:
-        BinaryPathSearch b = new BinaryPathSearch(1, 3);
-        b.createCP(1,3);
+        BinaryPathSearch b = new BinaryPathSearch(0, 5);
+        b.createCP(0,5);
     }
 
     int vInd, cpDist; //start vertex
@@ -27,6 +27,7 @@ public class BinaryPathSearch {
     int dec = 3;
     double prec = Math.pow(10, dec);
     double cpCovDist = 0;
+    int n = Algo.x.length;
 
     public BinaryPathSearch(int vInd, int cpDist) {
         new Algo();
@@ -40,32 +41,33 @@ public class BinaryPathSearch {
 
     private double calcY1(int v) {
         //calc x
+        
         double x = Algo.vertex[v].distance(px1);
         double y = (Algo.distB - x) * Math.sin(alpha) / Math.sin(Algo.vAngles[v] - alpha);
         //System.out.println("y1 = "+ y);
-        py1 = Algo.pointAtDist(Algo.vertex[v], Algo.vertex[v + 1], y);
+        py1 = Algo.pointAtDist(Algo.vertex[v], Algo.vertex[(v+1)%n], y);
         return y;
     }
 
     private double calcX1(Point.Double py) {
         double y = Algo.vertex[vInd].distance(py);
         x1 = Algo.distB - (y * Math.sin(Algo.vAngles[vInd] - alpha) / Math.sin(alpha));
-        px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[vInd + 1], x1);
+        px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[(vInd + 1)%n], x1);
         return x1;
     }
 
     private double initX1_px1(int vInd) {
-        px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[vInd - 1], Algo.distB);
+        px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[vInd - 1==-1?n-1:vInd-1], Algo.distB);
         return Algo.distB;
     }
 
     private double calcNextX1(int v) //sets px1 and returns x1
     {
-        double distToNextV = py1.distance(Algo.vertex[v + 1]); //py1 to v+1
+        double distToNextV = py1.distance(Algo.vertex[(v+1)%n]); //py1 to v+1
         double remDist = distToNextV - Math.floor(distToNextV / Algo.distB) * Algo.distB; // total - dist covered by complete cams
         double li = distToNextV - remDist; // distance in between
         cpDist += li;
-        next_px1 = Algo.pointAtDist(py1, Algo.vertex[v + 1], li); // point on edge at li
+        next_px1 = Algo.pointAtDist(py1, Algo.vertex[(v+1)%n], li); // point on edge at li
         px1 = next_px1; //update current px1
         return remDist;
     }
@@ -84,38 +86,41 @@ public class BinaryPathSearch {
         tempX1 = x1;
         while(Math.round(tempX1 * prec) / prec !=  Math.round(y1 * prec) / prec)
         {            
+            //System.out.printf("%."+dec+"f : ",tempX1);
             c = new CanPath();
             //add first VertCam
             VertCam v = new VertCam(px1, py1, "gamma", vInd);
             c.addVertCam(v);
             cpCovDist = x1+y1;
+            int k = 0;
             for (int i = vInd; i < vInd + cpDist; i++) {
-                x1 = calcNextX1(i); //sets x1 and px1 for vertex[vInd+1]7658345885
-                y1 = calcY1(i+1); //sets y1 and py1 for vertex[vInd+1]
+                k = i%n;
+                x1 = calcNextX1(k); //sets x1 and px1 for vertex[vInd+1]
+                y1 = calcY1((k+1)%n); //sets y1 and py1 for vertex[vInd+1]
                 //add VertCam for vInd+1
                 cpCovDist += x1+y1;
                 v = new VertCam(px1, py1, "", i);
                 c.addVertCam(v);
             }
-            System.out.printf("%."+dec+"f : %."+dec+"f : %."+dec+"f\n",tempX1,y1, cpCovDist);
+            //System.out.printf("%."+dec+"f : %."+dec+"f\n",y1, cpCovDist);
             if( Math.round(tempX1 * prec) / prec !=  Math.round(y1 * prec) / prec)
             {
                 if(tempX1 < y1)
                 {
                     tempX1 = tempX1 + tempX1/2;
-                    px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[vInd - 1], tempX1);
+                    px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[vInd - 1==-1?n-1:vInd-1], tempX1);
                 }
                 else if(tempX1 > y1)
                 {
                     tempX1 = tempX1 - tempX1/2;
-                    px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[vInd - 1], tempX1);
+                    px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[vInd - 1== -1?n-1:vInd-1], tempX1);
                 }
             }
             
             //System.out.printf("%."+dec+"f : %."+dec+"f\n",tempX1,y1);
             
         }
-        System.out.printf("%."+dec+"f : %."+dec+"f\n",tempX1,y1);
+        System.out.printf("%."+dec+"f : %."+dec+"f : %."+dec+"f\n",tempX1,y1, cpCovDist);
         
         return c;
     }

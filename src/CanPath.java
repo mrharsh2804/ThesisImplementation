@@ -67,7 +67,8 @@ public class CanPath {
             {
                 cov+= v.getXCovAtVer();
                 cov+= v.getYCovAtVer();
-            }    */
+            }
+            */
             cov+= v.getVertCamCov();
             
         }

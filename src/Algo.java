@@ -27,7 +27,7 @@ public class Algo {
     public static final double[] polyLength = new double[vertex.length];
     
     String[][] cp = new String[vertex.length][vertex.length];
-    HashMap<String, CanPath> cpMap = new HashMap<>();
+    HashMap<String, Dictionary<CaPath,double> cpMap = new HashMap<>();
     
     Algo()
     {
@@ -92,6 +92,23 @@ public class Algo {
         }
         p = vertex[vertex.length-1];
         polyLength[vertex.length-1] = p.distance(new Point.Double(vertex[0].getX(), vertex[0].getY()));
+    }
+    
+    public void optimalPath()
+    {
+        PathComb p = new PathComb();
+        for(int i = 0 ; i < vertex.length-1; i++) // for can path
+        {
+            for(int j = 0; j < vertex.length-1; j++)//for vertices
+            {
+                int[] verColc = generateArray(i,j);
+                ArrayList<ArrayList<ArrayList<Integer>>> c = p.getPaths(verColc);
+                CanPath[] cpCombo = createCPCombo(c);
+                CanPath cp = checkForBestCP(cpCombo);
+                String sCP = parseGetPathsOP(cp);
+                map.put(cp, dist);
+            }
+        }
     }
     
     public CanPath createCanPath(CanPath[] cp)
@@ -191,9 +208,8 @@ public class Algo {
     public CanPath createCanPath(int startInd, int dist) //for can dist of k. no combo
     {
         //use BinaryPathSearch.java for this
-        CanPath cpArr = new CanPath();
-        
-        return cpArr;
+        BinaryPathSearch b = new BinaryPathSearch(startInd, dist);
+        return b.createCP(startInd, dist);
     }
     
     //to be used for bisector vert cam
@@ -231,6 +247,22 @@ public class Algo {
         double y_t = ((1 - t) * y1 + t * y2);
         
         return  new Point.Double(x_t,y_t);
+    }
+
+    private int[] generateArray(int i, int j) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private String parseGetPathsOP(CanPath c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private CanPath checkForBestCP(ArrayList<ArrayList<ArrayList<Integer>>> cpCombo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private CanPath[] createCPCombo(ArrayList<ArrayList<ArrayList<Integer>>> c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
 
