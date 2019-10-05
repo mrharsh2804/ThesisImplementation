@@ -27,7 +27,7 @@ public class Algo {
     public static final double[] polyLength = new double[vertex.length];
     
     String[][] cp = new String[vertex.length][vertex.length];
-    HashMap<String, Dictionary<CaPath,double> cpMap = new HashMap<>();
+    HashMap<String, CanPath> cpMap = new HashMap<>();
     
     Algo()
     {
@@ -88,7 +88,7 @@ public class Algo {
         for(int i = 1; i < vertex.length; i++)
         {
             p = vertex[i-1];
-            polyLength[i] = p.distance(vertex[i]);
+            polyLength[i-1] = p.distance(vertex[i]);
         }
         p = vertex[vertex.length-1];
         polyLength[vertex.length-1] = p.distance(new Point.Double(vertex[0].getX(), vertex[0].getY()));
@@ -96,19 +96,19 @@ public class Algo {
     
     public void optimalPath()
     {
-        PathComb p = new PathComb();
-        for(int i = 0 ; i < vertex.length-1; i++) // for can path
-        {
-            for(int j = 0; j < vertex.length-1; j++)//for vertices
-            {
-                int[] verColc = generateArray(i,j);
-                ArrayList<ArrayList<ArrayList<Integer>>> c = p.getPaths(verColc);
-                CanPath[] cpCombo = createCPCombo(c);
-                CanPath cp = checkForBestCP(cpCombo);
-                String sCP = parseGetPathsOP(cp);
-                map.put(cp, dist);
-            }
-        }
+//        PathComb p = new PathComb();
+//        for(int i = 0 ; i < vertex.length-1; i++) // for can path
+//        {
+//            for(int j = 0; j < vertex.length-1; j++)//for vertices
+//            {
+//                int[] verColc = generateArray(i,j);
+//                ArrayList<ArrayList<ArrayList<Integer>>> c = p.getPaths(verColc);
+//                CanPath[] cpCombo = createCPCombo(c);
+//                CanPath cp = checkForBestCP(cpCombo);
+//                String sCP = parseGetPathsOP(cp);
+//                map.put(cp, dist);
+//            }
+//        }
     }
     
     public CanPath createCanPath(CanPath[] cp)
