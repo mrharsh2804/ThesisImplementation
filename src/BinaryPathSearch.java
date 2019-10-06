@@ -14,9 +14,9 @@ import java.awt.*;
 public class BinaryPathSearch {
 
     public static void main(String[] args) {
-        // Demo for 4 vertices:
-        BinaryPathSearch b = new BinaryPathSearch(0, 5);
-        b.createCP(0,5);
+        
+        BinaryPathSearch b = new BinaryPathSearch(5,1);
+        b.createCP(5,1);
     }
 
     int vInd, cpDist; //start vertex
@@ -24,11 +24,10 @@ public class BinaryPathSearch {
     double y1, y2, x1, x2;
     double alpha;//  values in radians
     Point.Double next_px1;
-    int dec = 2;
+    int dec = 2;//2: 1117.43(4555) 3: 1105.332(13100) 4: 1105.3327(3637695)
     double prec = Math.pow(10, dec);
     double cpCovDist = 0;
     int n = Algo.x.length;
-    Poly p = new Poly();
 
     public BinaryPathSearch(int vInd, int cpDist) {
         Algo a = new Algo();
@@ -69,7 +68,7 @@ public class BinaryPathSearch {
         double distToNextV = py1.distance(Algo.vertex[(v+1)%n]); //py1 to v+1
         double remDist = distToNextV - Math.floor(distToNextV / Algo.distB) * Algo.distB; // total - dist covered by complete cams
         double li = distToNextV - remDist; // distance in between
-        cpDist += li;
+        cpCovDist += li;
         next_px1 = Algo.pointAtDist(py1, Algo.vertex[(v+1)%n], li); // point on edge at li
         px1 = next_px1; //update current px1
         return remDist;
@@ -90,14 +89,15 @@ public class BinaryPathSearch {
         while(Math.round(tempX1 * prec) / prec !=  Math.round(y2 * prec) / prec)
         {            
             //System.out.printf("%."+dec+"f : ",tempX1);
-            System.out.printf("%."+dec+"f : %."+dec+"f\n",tempX1,y2);
+            //System.out.printf("%."+dec+"f : %."+dec+"f\n",tempX1,y2);
             c = new CanPath();
             tempX1 = x1;
             //add first VertCam
             VertCam v = new VertCam(px1, py1, "gamma", vInd);
-            System.out.println("putMarker("+(int)px1.getX()+","+(int)px1.getY()+");");
-            System.out.println("putMarker("+(int)py1.getX()+","+(int)py1.getY()+");");
+            //System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
+            //System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
             c.addVertCam(v);
+            
             cpCovDist = x1+y1;
             int k = 0;
             for (int i = vInd; i < vInd + cpDist; i++) {
@@ -106,8 +106,8 @@ public class BinaryPathSearch {
                 y1 = calcY1((k+1)%n); //sets y1 and py1 for vertex[vInd+1]
                 //add VertCam for vInd+1
                 cpCovDist += x1+y1;
-                System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
-                System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
+                //System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
+                //System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
                 v = new VertCam(px1, py1, "", i);
                 c.addVertCam(v);
             }
@@ -129,15 +129,16 @@ public class BinaryPathSearch {
                     y1 = calcY1(vInd);
                 }
             }
-            if(count == 4554)
-            {
-                System.out.printf("%."+dec+"f : %."+dec+"f\n",tempX1,y2);
-            }
-            System.out.printf("%."+dec+"f : %."+dec+"f\n",tempX1,y2);
+            
+            //System.out.printf("%."+dec+"f : %."+dec+"f\n",tempX1,y2);
             count++;
         }
-        //System.out.printf("%."+dec+"f : %."+dec+"f : %."+dec+"f\n",tempX1,tempY1, cpCovDist);
-        System.out.println(count);
+        
+        System.out.println("------------"+vInd+" : "+ (vInd+cpDist)%n +"--------------");
+        System.out.printf("%."+dec+"f : %."+dec+"f : %."+dec+"f\n",tempX1,y2, cpCovDist);
+        
+        //System.out.println(count);
+        c.setcpCovDist(cpCovDist);
         return c;
     }
 

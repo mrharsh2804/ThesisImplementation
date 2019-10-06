@@ -7,13 +7,23 @@ public class PathComb {
 //    public static void main(String[] args) {
 //        // Demo for 4 vertices:
 //
-//        int[] input = new int[]{1, 2, 3, 4};
+//        int[] input = generateArray(4,5);//new int[]{4, 5, 0, 1};
 //        ArrayList<ArrayList<ArrayList<Integer>>> results = getPaths(input);
 //// Output results:
 //        results.forEach((n) -> System.out.println(n));
 //    }
+    
+    private static int[] generateArray(int i, int j) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int[] col = new int[j+1];
+        for(int k = 0; k <= j; k++)
+        {
+            col[k] = (i+k)%Algo.x.length;
+        }        
+        return col;
+    }
 
-    public ArrayList<ArrayList<ArrayList<Integer>>> getPaths(int[] vertices) {
+    public static ArrayList<ArrayList<ArrayList<Integer>>> getPaths(int[] vertices) {
         int pathCount = 1 << (vertices.length - 1);
         ArrayList<ArrayList<ArrayList<Integer>>> paths = new ArrayList<>();
         for (int i = 0; i < pathCount; i++) {

@@ -26,7 +26,7 @@ public class Algo {
     public static Point.Double[] vertex = new Point.Double[x.length];
     public static final double[] polyLength = new double[vertex.length];
     
-    String[][] cp = new String[vertex.length][vertex.length];
+    //String[][] cp = new String[vertex.length][vertex.length];
     HashMap<String, CanPath> cpMap = new HashMap<>();
     
     Algo()
@@ -96,19 +96,26 @@ public class Algo {
     
     public void optimalPath()
     {
-//        PathComb p = new PathComb();
-//        for(int i = 0 ; i < vertex.length-1; i++) // for can path
-//        {
-//            for(int j = 0; j < vertex.length-1; j++)//for vertices
-//            {
-//                int[] verColc = generateArray(i,j);
-//                ArrayList<ArrayList<ArrayList<Integer>>> c = p.getPaths(verColc);
-//                CanPath[] cpCombo = createCPCombo(c);
-//                CanPath cp = checkForBestCP(cpCombo);
-//                String sCP = parseGetPathsOP(cp);
-//                map.put(cp, dist);
-//            }
-//        }
+        //PathComb p = new PathComb();
+        for(int i = 0 ; i <= vertex.length-1; i++) // for can path
+        {
+            for(int j = 0; j <= vertex.length-1; j++)//for vertices
+            {
+                if(i == 2)
+                {
+                    System.out.print("");
+                }
+                int[] verColc = generateArray(j,i);
+                ArrayList<ArrayList<ArrayList<Integer>>> c = PathComb.getPaths(verColc);
+                ArrayList<CanPath> cpCombo = createCPCombo(c);
+                CanPath cp = checkForBestCP(cpCombo);
+                String sCP = parseGetPathsOP(cp);
+                cpMap.put(sCP, cp);
+            }
+        }
+        
+        System.out.println();
+        
     }
     
     public CanPath createCanPath(CanPath[] cp)
@@ -250,19 +257,95 @@ public class Algo {
     }
 
     private int[] generateArray(int i, int j) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int[] col = new int[j+1];
+        for(int k = 0; k <= j; k++)
+        {
+            col[k] = (i+k)%Algo.x.length;
+        }        
+        return col;
     }
 
     private String parseGetPathsOP(CanPath c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder sCP = new StringBuilder();
+        for(VertCam v : c.getcPath())
+        {
+            sCP.append(v.index);
+        }
+        return sCP.toString();
     }
 
-    private CanPath checkForBestCP(ArrayList<ArrayList<ArrayList<Integer>>> cpCombo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private CanPath checkForBestCP(ArrayList<CanPath> cpCombo) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        double max = 0;
+        for(CanPath cp : cpCombo)
+        {
+            double cpCov = cp.getcpCovDist();
+            if(cpCov > max)
+                max = cpCov;
+        }
+        
+        for(CanPath cp : cpCombo)
+        {
+            if(max == cp.getcpCovDist())
+                return cp;
+        }
+        
+        return null;     
+        
     }
 
-    private CanPath[] createCPCombo(ArrayList<ArrayList<ArrayList<Integer>>> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private ArrayList<CanPath> createCPCombo(ArrayList<ArrayList<ArrayList<Integer>>> paths) {
+        //paths is collection of possible combinations of the path.
+        //cpCombo containts actual can paths for each corresponding cpcol.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<CanPath> cpCombo = new ArrayList<>();
+        //for(ArrayList<ArrayList<Integer>> path : paths)
+        for(int k = 0; k < paths.size()-1;k++)
+        {
+            ArrayList<ArrayList<Integer>> path = paths.get(k);
+            CanPath c = new CanPath();
+            double cpDist = 0;
+            int j=0;
+            Point.Double prev_py;
+            Point.Double cur_px;
+            for(ArrayList<Integer> group : path)
+            {
+                StringBuilder sCP = new StringBuilder();
+                for(Integer i : group)
+                {
+                    sCP.append(i);
+                }                
+                CanPath cp = cpMap.get(sCP.toString());
+                for(VertCam v : cp.getcPath())
+                {
+                    c.addVertCam(v);
+                }
+                cpDist += cp.getcpCovDist();
+                
+                prev_py = cp.getEndPoint();
+                if(j>0)
+                {
+                    cur_px = cp.getStartPoint();
+                    cpDist += cur_px.distance(prev_py);
+                    j++;
+                }
+                j++;
+                
+            }
+            c.setcpCovDist(cpDist);
+            cpCombo.add(c);
+        }
+        
+        //for path of dist cpDist
+        ArrayList<Integer> group = paths.get(paths.size()-1).get(0);
+        int startInd = group.get(0);
+        BinaryPathSearch b = new BinaryPathSearch(startInd, group.size()-1);
+        CanPath c = b.createCP(startInd, group.size()-1);
+        cpCombo.add(c);        
+        
+        return cpCombo;
     }
 }
 

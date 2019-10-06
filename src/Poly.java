@@ -1,6 +1,7 @@
 
 import java.awt.*;
 import java.applet.*;
+import java.awt.geom.Line2D;
 import java.util.*;
 import java.util.stream.*;
 /*
@@ -97,49 +98,49 @@ public class Poly extends javax.swing.JApplet {
         
         
         Polygon p = new Polygon(x,y,numberofpoints);
-        g.setColor(Color.green);
-        putMarker(84,160);
-        putMarker(100,100);
-        putMarker(286,100);
-        putMarker(336,154);
-        putMarker(370,206);
-        putMarker(395,261);
-        putMarker(302,493);
-        putMarker(206,500);
-        putMarker(206,500);
-        putMarker(146,492);
-        putMarker(62,325);
-        putMarker(58,264);
+g.setColor(Color.green);
+putMarker(84.88567975002711,160.45728099989157);
+putMarker(100.0,100.0);
+putMarker(286.9538165501505,100.0);
+putMarker(336.30109912980504,154.4516486947075);
+putMarker(370.8688720382797,206.30330805741949);
+putMarker(395.2282056314687,261.9294859213282);
+putMarker(302.6509997974135,493.3725005064663);
+putMarker(206.87855374711955,500.0);
+putMarker(206.87855374711955,500.0);
+putMarker(146.315803247098,492.6316064941959);
+putMarker(62.70751475526562,325.4150295105312);
+putMarker(58.99365332641487,264.02538669434057);
 g.setColor(Color.blue);
-putMarker(92,130);
-putMarker(165,100);
-putMarker(289,100);
-putMarker(338,157);
-putMarker(373,209);
-putMarker(393,266);
-putMarker(300,498);
-putMarker(198,500);
-putMarker(198,500);
-putMarker(140,481);
-putMarker(56,313);
-putMarker(62,250);
+putMarker(92.3781233361901,130.48750665523957);
+putMarker(165.2244112458848,100.0);
+putMarker(289.86028894598513,100.0);
+putMarker(338.4424505329012,157.66367579935184);
+putMarker(373.01022344137584,209.51533516206382);
+putMarker(393.3487213785121,266.62819655371976);
+putMarker(300.77151554445686,498.07121113885785);
+putMarker(198.3381879857033,500.0);
+putMarker(198.3381879857033,500.0);
+putMarker(140.5312545873877,481.06250917477536);
+putMarker(56.922966095555346,313.84593219111065);
+putMarker(62.424897082921376,250.30041166831452);
         
 g.setColor(Color.red);
 
-putMarker(88,145);
-putMarker(132,100);
-putMarker(256,100);
-putMarker(314,121);
-putMarker(383,224);
-putMarker(384,288);
-putMarker(315,462);
-putMarker(263,500);
-putMarker(200,500);
-putMarker(142,484);
-putMarker(58,317);
-putMarker(61,254);
+putMarker(88.56718500428515,145.73125998285934);
+putMarker(132.048824918892,100.0);
+putMarker(256.68470261899233,100.0);
+putMarker(314.0002475270659,121.00037129059882);
+putMarker(383.13579334401516,224.7036900160228);
+putMarker(384.46141350521987,288.84646623695033);
+putMarker(315.02850912967847,462.4287271758039);
+putMarker(263.12188579238415,500.0);
+putMarker(200.803946942334,500.0);
+putMarker(142.20135901455234,484.4027180291047);
+putMarker(58.593070522719984,317.18614104543997);
+putMarker(61.43423459125005,254.26306163499981);
 
-    Point.Double p1 = new Point.Double(88,145);
+    Point.Double p1 = new Point.Double(88.56718500428515,145.73125998285934);
     Point.Double p2 = new Point.Double(61.43423459125005,254.26306163499981);
     
     Point.Double v1 = new Point.Double(x[0], y[0]);
@@ -151,10 +152,11 @@ putMarker(61,254);
         
     }
     
-    public void putMarker(int x, int y)
+    public void putMarker(double x, double y)
     {
-        g.drawLine(x-5,y,x+5,y);
-        g.drawLine(x,y-5,x,y+5);
+        
+        g.draw(new Line2D.Double(x-5,y,x+5,y));
+        g.draw(new Line2D.Double(x,y-5,x,y+5));
     }
     public Graphics2D getGraph()
     {

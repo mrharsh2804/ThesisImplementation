@@ -10,11 +10,16 @@ public class CanPath {
     ArrayList<VertCam> cPath;
     int cDist;
     String cpName;
+    double cpCovDist;
+    int cpCamCount;
+
     
     public CanPath()
     {
         cPath = new ArrayList<>();
         cDist = 0;
+        cpCovDist = 0;
+        cpCamCount =0;
         //cpName = buildName();
     }
     
@@ -33,6 +38,7 @@ public class CanPath {
     {
         cPath.add(v);
         cDist++;
+        cpCamCount++;
     }
     
     public Point.Double getEndPoint()
@@ -75,4 +81,24 @@ public class CanPath {
                 
         return cov;
     }  
+    
+    public ArrayList<VertCam> getcPath()
+    {
+        return cPath;
+    }
+    
+    public double getcpCovDist()
+    {
+        return cpCovDist;
+    }
+    
+    public void setcpCovDist(double dist)
+    {
+        cpCovDist = dist;
+    }
+    
+    public double getcpCamCount()
+    {
+        return cpCamCount;
+    }
 }
