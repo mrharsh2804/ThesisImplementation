@@ -28,10 +28,10 @@ public class CanPath {
         StringBuilder s = new StringBuilder();
         for(VertCam v:cPath)
         {
-            s.append(v.index+',');
+            s.append(v.index);
         }
         
-        return s.substring(0,s.length()-2);
+        return s.toString();
     }
     
     public void addVertCam(VertCam v)

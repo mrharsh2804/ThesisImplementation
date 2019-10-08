@@ -15,8 +15,8 @@ public class BinaryPathSearch {
 
     public static void main(String[] args) {
         
-        BinaryPathSearch b = new BinaryPathSearch(5,1);
-        b.createCP(5,1);
+        BinaryPathSearch b = new BinaryPathSearch(0,6);
+        b.createCP(0,6);
     }
 
     int vInd, cpDist; //start vertex
@@ -108,7 +108,7 @@ public class BinaryPathSearch {
                 cpCovDist += x1+y1;
                 //System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
                 //System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
-                v = new VertCam(px1, py1, "", i);
+                v = new VertCam(px1, py1, "", (i+1)%n);
                 c.addVertCam(v);
             }
             //System.out.printf("%."+dec+"f : %."+dec+"f\n",y1, cpCovDist);

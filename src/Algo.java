@@ -94,28 +94,51 @@ public class Algo {
         polyLength[vertex.length-1] = p.distance(new Point.Double(vertex[0].getX(), vertex[0].getY()));
     }
     
-    public void optimalPath()
+    public CanPath optimalPath()
     {
         //PathComb p = new PathComb();
+        ArrayList<CanPath> fullCovCP = new ArrayList();
+//        Comparator<CanPath> covComparator = new Comparator<CanPath>() {
+//            @Override
+//            public int compare(CanPath c1, CanPath c2) {
+//                return (int)c1.cpCovDist - (int)c2.cpCovDist;
+//            }
+//        };
+        //Queue<CanPath> pq = new PriorityQueue<CanPath>(covComparator);
         for(int i = 0 ; i <= vertex.length-1; i++) // for can path
         {
             for(int j = 0; j <= vertex.length-1; j++)//for vertices
             {
-                if(i == 2)
-                {
-                    System.out.print("");
-                }
                 int[] verColc = generateArray(j,i);
+                
                 ArrayList<ArrayList<ArrayList<Integer>>> c = PathComb.getPaths(verColc);
                 ArrayList<CanPath> cpCombo = createCPCombo(c);
                 CanPath cp = checkForBestCP(cpCombo);
                 String sCP = parseGetPathsOP(cp);
+                cp.cpName = sCP;
                 cpMap.put(sCP, cp);
+                if(i == vertex.length-1)
+                {
+                    fullCovCP.add(cp);
+                    //spq.add(cp);
+                }
             }
         }
         
-        System.out.println();
+        double max = 0;
+        int j = 0;
+        for(int i = 0; i < fullCovCP.size(); i++)
+        {
+            if(max < fullCovCP.get(i).getcpCovDist())
+            {
+                max = fullCovCP.get(i).getcpCovDist();
+                j++;
+            }                
+        }
         
+        System.out.print(fullCovCP.get(j).cpName+"\n");
+        
+        return fullCovCP.get(j);        
     }
     
     public CanPath createCanPath(CanPath[] cp)
@@ -308,7 +331,7 @@ public class Algo {
             CanPath c = new CanPath();
             double cpDist = 0;
             int j=0;
-            Point.Double prev_py;
+            Point.Double prev_py = null;
             Point.Double cur_px;
             for(ArrayList<Integer> group : path)
             {
@@ -324,15 +347,14 @@ public class Algo {
                 }
                 cpDist += cp.getcpCovDist();
                 
-                prev_py = cp.getEndPoint();
                 if(j>0)
                 {
                     cur_px = cp.getStartPoint();
-                    cpDist += cur_px.distance(prev_py);
-                    j++;
+                    cpDist += cur_px.distance(prev_py);//277.84263805014956 282.7630906181313
                 }
-                j++;
                 
+                prev_py = cp.getEndPoint();
+                j++;                
             }
             c.setcpCovDist(cpDist);
             cpCombo.add(c);
