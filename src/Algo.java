@@ -21,10 +21,11 @@ public class Algo {
     // x coordinates of vertices 
     public static int x[] = {100, 300, 400, 300, 150, 50};
     // y coordinates of vertices
-    public static int y[] = {100, 100, 250, 500, 500, 300};
+    public static int y[] = {100, 100, 250, 510, 500, 300};
     
     public static Point.Double[] vertex = new Point.Double[x.length];
     public static final double[] polyLength = new double[vertex.length];
+    public static double peri;
     
     //String[][] cp = new String[vertex.length][vertex.length];
     HashMap<String, CanPath> cpMap = new HashMap<>();
@@ -89,22 +90,18 @@ public class Algo {
         {
             p = vertex[i-1];
             polyLength[i-1] = p.distance(vertex[i]);
+            peri += polyLength[i-1];
         }
         p = vertex[vertex.length-1];
         polyLength[vertex.length-1] = p.distance(new Point.Double(vertex[0].getX(), vertex[0].getY()));
+        peri +=polyLength[vertex.length-1];
     }
     
     public CanPath optimalPath()
     {
         //PathComb p = new PathComb();
         ArrayList<CanPath> fullCovCP = new ArrayList();
-//        Comparator<CanPath> covComparator = new Comparator<CanPath>() {
-//            @Override
-//            public int compare(CanPath c1, CanPath c2) {
-//                return (int)c1.cpCovDist - (int)c2.cpCovDist;
-//            }
-//        };
-        //Queue<CanPath> pq = new PriorityQueue<CanPath>(covComparator);
+        
         for(int i = 0 ; i <= vertex.length-1; i++) // for can path
         {
             for(int j = 0; j <= vertex.length-1; j++)//for vertices
@@ -120,7 +117,6 @@ public class Algo {
                 if(i == vertex.length-1)
                 {
                     fullCovCP.add(cp);
-                    //spq.add(cp);
                 }
             }
         }
@@ -129,11 +125,12 @@ public class Algo {
         int j = 0;
         for(int i = 0; i < fullCovCP.size(); i++)
         {
+            CanPath c = fullCovCP.get(i);
             if(max < fullCovCP.get(i).getcpCovDist())
             {
                 max = fullCovCP.get(i).getcpCovDist();
-                j++;
-            }                
+                j=i;
+            }
         }
         
         System.out.print(fullCovCP.get(j).cpName+"\n");

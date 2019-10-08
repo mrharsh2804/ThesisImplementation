@@ -13,18 +13,18 @@ import java.awt.*;
  */
 public class BinaryPathSearch {
 
-    public static void main(String[] args) {
-        
-        BinaryPathSearch b = new BinaryPathSearch(0,6);
-        b.createCP(0,6);
-    }
+//    public static void main(String[] args) {
+//        
+//        BinaryPathSearch b = new BinaryPathSearch(1,4);
+//        b.createCP(1,4);
+//    }
 
     int vInd, cpDist; //start vertex
     Point.Double px1, py1, px2, py2;
     double y1, y2, x1, x2;
     double alpha;//  values in radians
     Point.Double next_px1;
-    int dec = 2;//2: 1117.43(4555) 3: 1105.332(13100) 4: 1105.3327(3637695)
+    int dec = 2;
     double prec = Math.pow(10, dec);
     double cpCovDist = 0;
     int n = Algo.x.length;
@@ -94,8 +94,11 @@ public class BinaryPathSearch {
             tempX1 = x1;
             //add first VertCam
             VertCam v = new VertCam(px1, py1, "gamma", vInd);
-            //System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
-            //System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
+            
+            if(-1 == Algo.vertex.length-1){
+            System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
+            System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
+            }
             c.addVertCam(v);
             
             cpCovDist = x1+y1;
@@ -106,8 +109,10 @@ public class BinaryPathSearch {
                 y1 = calcY1((k+1)%n); //sets y1 and py1 for vertex[vInd+1]
                 //add VertCam for vInd+1
                 cpCovDist += x1+y1;
-                //System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
-                //System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
+                if(-1 == Algo.vertex.length-1){
+                    System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
+                    System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
+                    }
                 v = new VertCam(px1, py1, "", (i+1)%n);
                 c.addVertCam(v);
             }
