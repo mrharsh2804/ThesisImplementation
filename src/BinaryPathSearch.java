@@ -15,8 +15,8 @@ public class BinaryPathSearch {
 
     public static void main(String[] args) {
         
-        BinaryPathSearch b = new BinaryPathSearch(1,5);
-        b.createCP(1,5);
+        BinaryPathSearch b = new BinaryPathSearch(4,5);
+        b.createCP(4,5);
     }
 
     int vInd, cpDist; //start vertex
@@ -24,7 +24,7 @@ public class BinaryPathSearch {
     double y1, y2, x1, x2;
     double alpha;//  values in radians
     Point.Double next_px1;
-    int dec = 2;
+    int dec = 1;
     double prec = Math.pow(10, dec);
     double cpCovDist = 0;
     int n = Algo.x.length;
@@ -33,12 +33,11 @@ public class BinaryPathSearch {
         Algo a = new Algo();
         this.vInd = vInd;
         this.cpDist = cpDist;
-        this.y1 = 0;
+        //this.y1 = 0;
+        alpha = Algo.alpha;
         this.x1 = initX1_px1(vInd); //set initial x1 and px1
         y1 = calcY1(vInd); // sets y1 and py1        
-        alpha = Algo.alpha;
-        //p.init();
-        //p.paint(p.getGraph());
+        y2 = -1;
     }
 
     private double calcY1(int v) {
@@ -60,8 +59,8 @@ public class BinaryPathSearch {
     }
 
     private double initX1_px1(int vInd) {
-        px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[vInd - 1==-1?n-1:vInd-1], Algo.distB);
-        return Algo.distB;
+        px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[vInd - 1==-1?n-1:vInd-1], Algo.distB/2);
+        return Algo.distB/2;//181.0899572263979, 502.07266381509316
     }
 
     private double calcNextX1(int v) //sets px1 and returns x1
@@ -103,8 +102,8 @@ public class BinaryPathSearch {
             
             if(-1 == Algo.vertex.length-1)
             {
-            System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
-            System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
+            System.out.println("("+px1.getX()+","+px1.getY()+");");
+            System.out.println("("+py1.getX()+","+py1.getY()+");");
             }
             c.addVertCam(v);
             
@@ -118,8 +117,8 @@ public class BinaryPathSearch {
                 cpCovDist += x1+y1;
                 if(-1 == Algo.vertex.length-1)
                 {
-                    System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
-                    System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
+                    System.out.println("("+px1.getX()+","+px1.getY()+");");
+                    System.out.println("("+py1.getX()+","+py1.getY()+");");
                 }
                 v = new VertCam(px1, py1, "", (i+1)%n);
                 c.addVertCam(v);
@@ -147,10 +146,24 @@ public class BinaryPathSearch {
             count++;
         }
         
-        System.out.println("------------"+vInd+" : "+ (vInd+cpDist)%n +"--------------");
+        
+        //calc total cp distance
+        cpCovDist = tempX1+y2;
+        
+        //display the path
+        System.out.print("------------");
+        for(int i = vInd; i < vInd+cpDist; i++)
+        {
+            System.out.print(i%n+", ");
+            cpCovDist += Algo.vertex[i%n].distance(Algo.vertex[(i+1)%n]);
+        }
+        System.out.println((vInd+cpDist)%n+"-----------");
+        
+        
+        
         System.out.printf("%."+dec+"f : %."+dec+"f : %."+dec+"f\n",tempX1,y2, cpCovDist);
         
-        System.out.println(count);
+        //System.out.println(count);
         c.setcpCovDist(cpCovDist);
         return c;
     }

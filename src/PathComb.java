@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 public class PathComb {
 
-//    public static void main(String[] args) {
-//        // Demo for 4 vertices:
-//
-//        int[] input = generateArray(4,5);//new int[]{4, 5, 0, 1};
-//        ArrayList<ArrayList<ArrayList<Integer>>> results = getPaths(input);
-//// Output results:
-//        results.forEach((n) -> System.out.println(n));
-//    }
+    public static void main(String[] args) {
+        // Demo for 4 vertices:
+
+        int[] input = generateArray(4,5);//new int[]{4, 5, 0, 1};
+        ArrayList<ArrayList<ArrayList<Integer>>> results = getPaths(input);
+// Output results:
+        results.forEach((n) -> System.out.println(n));
+    }
     
     private static int[] generateArray(int i, int j) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
