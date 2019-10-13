@@ -135,7 +135,7 @@ public class BinaryPathSearch {
             //add first VertCam
             VertCam v = new VertCam(px1, py1, ori, vInd);
             
-            if(-1 == Algo.vertex.length-1)
+            if(true)//-1 == Algo.vertex.length-1)
             {
             System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
             System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
@@ -150,7 +150,7 @@ public class BinaryPathSearch {
                 y1 = calcY1((k+1)%n); //sets y1 and py1 for vertex[vInd+1]
                 //add VertCam for vInd+1
                 cpCovDist += x1+y1;
-                if(-1 == Algo.vertex.length-1)
+                if(true)//-1 == Algo.vertex.length-1)
                 {
                     System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
                     System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
