@@ -13,15 +13,15 @@ public class Algo {
     public static double THETA = Math.toRadians(60);
     public static double RANGE = 70;
     public static double distL = 20;
-    public static double gamma = 0;
     public static double alpha = Algo.THETA + Math.asin(Algo.distL/Algo.RANGE);
     public static double distA = 2 * Algo.RANGE * Math.sin(THETA/2) ;//sensor coverage when placed verticle.
     public static double beta = (Math.PI - THETA) / 2;
-    public static double distB = distA * Math.sin(beta)/Math.sin(alpha); //create method for coverage on straight line
+    public static double distB = distA * Math.sin(beta)/Math.sin(alpha); //create method for coverage on straight line    
+    public static double gamma = beta - Math.asin(distL/RANGE);
     // x coordinates of vertices 
     public static int x[] = {100, 300, 400, 300, 150, 50};
     // y coordinates of vertices
-    public static int y[] = {100, 100, 250, 510, 500, 300};
+    public static int y[] = {100, 100, 250, 500, 510, 300};
     
     public static Point.Double[] vertex = new Point.Double[x.length];
     public static final double[] polyLength = new double[vertex.length];
@@ -366,6 +366,8 @@ public class Algo {
         
         return cpCombo;
     }
+    
+    
 }
 
 

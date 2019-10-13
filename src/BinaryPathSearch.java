@@ -1,5 +1,7 @@
 
 import java.awt.*;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 
 
 /*
@@ -13,21 +15,22 @@ import java.awt.*;
  */
 public class BinaryPathSearch {
 
-    public static void main(String[] args) {
-        
-        BinaryPathSearch b = new BinaryPathSearch(4,5);
-        b.createCP(4,5);
-    }
+//    public static void main(String[] args) {
+//        
+//        BinaryPathSearch b = new BinaryPathSearch(0,5);
+//        b.createCP(0,5);
+//    }
 
     int vInd, cpDist; //start vertex
     Point.Double px1, py1, px2, py2;
     double y1, y2, x1, x2;
     double alpha;//  values in radians
     Point.Double next_px1;
-    int dec = 1;
+    int dec = 2;
     double prec = Math.pow(10, dec);
     double cpCovDist = 0;
     int n = Algo.x.length;
+    String ori = "gamma";
 
     public BinaryPathSearch(int vInd, int cpDist) {
         Algo a = new Algo();
@@ -41,22 +44,48 @@ public class BinaryPathSearch {
     }
 
     private double calcY1(int v) {
-        //calc x
-        
+        //calc x        
         double x = Algo.vertex[v].distance(px1);
-        double y = (Algo.distB - x) * Math.sin(alpha) / Math.sin(Algo.vAngles[v] - alpha);
+        double y ;//= (Algo.distB - x) * Math.sin(alpha) / Math.sin(Algo.vAngles[v] - alpha);
         
-        //System.out.println("y1 = "+ y);
+        //generate line 2rsin(theta/2)@gamma
+        double edgeAngle = getAngleOfLine(Algo.vertex[v - 1==-1?n-1:v-1], Algo.vertex[v]);
+        Point2D.Double p = pointAtAngleLen(px1, -(edgeAngle + Algo.gamma),Algo.distA);
+        Line2D.Double l1 = new Line2D.Double(px1, p);
+        //generate [v(i)-> v(i+1)]
+        Line2D.Double l2 = new Line2D.Double(Algo.vertex[v], Algo.vertex[(v+1)%n]);
+        boolean intersects = l1.intersectsLine(l2);
+        //if 2rsin(theta/2)@gamma and [v(i)-> v(i+1)] intersect, use 1 else use 2 to calc y(gamma)
+        if(!intersects)
+        {
+            y =(Algo.distB - x) * Math.sin(alpha) / Math.sin(Algo.vAngles[v] - alpha);
+        }
+        else
+        {
+            y = x * Math.sin(Algo.gamma) / Math.sin(Math.PI - Algo.vAngles[v] - Algo.gamma);
+            double y_bis = Algo.RANGE *Math.sin(Algo.THETA/2)/ Math.sin(Algo.vAngles[v]/2);
+            //if y < y_bis, use y_bis. (bisector ori) reassign x and px1. 
+            if(y < y_bis)
+            {
+                x = y_bis;
+                y = y_bis;
+                px1 = Algo.pointAtDist(Algo.vertex[(v)%n], Algo.vertex[v - 1==-1?n-1:v-1], x);
+                ori = "bisector";
+            }
+        }
+        
+        //calc x and y_bis
+        
         py1 = Algo.pointAtDist(Algo.vertex[v], Algo.vertex[(v+1)%n], y);
         return y;
     }
 
-    private double calcX1(Point.Double py) {
-        double y = Algo.vertex[vInd].distance(py);
-        x1 = Algo.distB - (y * Math.sin(Algo.vAngles[vInd] - alpha) / Math.sin(alpha));
-        px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[(vInd + 1)%n], x1);
-        return x1;
-    }
+//    private double calcX1(Point.Double py) {
+//        double y = Algo.vertex[vInd].distance(py);
+//        x1 = Algo.distB - (y * Math.sin(Algo.vAngles[vInd] - alpha) / Math.sin(alpha));
+//        px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[(vInd + 1)%n], x1);
+//        return x1;
+//    }
 
     private double initX1_px1(int vInd) {
         px1 = Algo.pointAtDist(Algo.vertex[vInd], Algo.vertex[vInd - 1==-1?n-1:vInd-1], Algo.distB/2);
@@ -82,6 +111,12 @@ public class BinaryPathSearch {
     }
 
     public CanPath createCP(int vInd, int cpDist) {
+        /*
+        // x coordinates of vertices 
+        public static int x[] = {100, 300, 400, 300, 150, 50};
+        // y coordinates of vertices
+        public static int y[] = {100, 100, 250, 510, 500, 300};*/
+        
         CanPath c = new CanPath();
         BinaryPathSearch b = new BinaryPathSearch(vInd, cpDist);
         double tempX1 = x1;
@@ -98,12 +133,12 @@ public class BinaryPathSearch {
             c = new CanPath();
             tempX1 = x1;
             //add first VertCam
-            VertCam v = new VertCam(px1, py1, "gamma", vInd);
+            VertCam v = new VertCam(px1, py1, ori, vInd);
             
             if(-1 == Algo.vertex.length-1)
             {
-            System.out.println("("+px1.getX()+","+px1.getY()+");");
-            System.out.println("("+py1.getX()+","+py1.getY()+");");
+            System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
+            System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
             }
             c.addVertCam(v);
             
@@ -117,10 +152,11 @@ public class BinaryPathSearch {
                 cpCovDist += x1+y1;
                 if(-1 == Algo.vertex.length-1)
                 {
-                    System.out.println("("+px1.getX()+","+px1.getY()+");");
-                    System.out.println("("+py1.getX()+","+py1.getY()+");");
+                    System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
+                    System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
                 }
-                v = new VertCam(px1, py1, "", (i+1)%n);
+                v = new VertCam(px1, py1, ori, (i+1)%n );
+                ori = "gamma";
                 c.addVertCam(v);
             }
             //System.out.printf("%."+dec+"f : %."+dec+"f\n",y1, cpCovDist);
@@ -166,6 +202,15 @@ public class BinaryPathSearch {
         //System.out.println(count);
         c.setcpCovDist(cpCovDist);
         return c;
+    }
+    
+    private double getAngleOfLine(Point2D.Double p1, Point2D.Double p2) {
+        double x1 = p1.getX(); double y1 = p1.getY(); double x2 = p2.getX(); double y2 = p2.getY();
+        double angle = Math.atan2(y2 - y1, x2 - x1);
+        if (angle < 0) {
+            angle += 2 * Math.PI;
+        }
+        return angle;
     }
 
 }
