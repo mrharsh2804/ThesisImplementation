@@ -11,8 +11,8 @@ import java.util.*;
 public class Algo {
     public static double[] vAngles; //in degrees
     public static double THETA = Math.toRadians(60);
-    public static double RANGE = 70;
-    public static double distL = 20;
+    public static double RANGE = 7;
+    public static double distL = 2;
     public static double alpha = Algo.THETA + Math.asin(Algo.distL/Algo.RANGE);
     public static double distA = 2 * Algo.RANGE * Math.sin(THETA/2) ;//sensor coverage when placed verticle.
     public static double beta = (Math.PI - THETA) / 2;
@@ -126,14 +126,20 @@ public class Algo {
         for(int i = 0; i < fullCovCP.size(); i++)
         {
             CanPath c = fullCovCP.get(i);
+            System.out.println("Number of Camera: "+ c.getcpCamCount());
             if(max < fullCovCP.get(i).getcpCovDist())
             {
                 max = fullCovCP.get(i).getcpCovDist();
                 j=i;
             }
         }
-        
-        System.out.print(fullCovCP.get(j).cpName+"\n");
+        String optCP = fullCovCP.get(j).cpName;
+        System.out.print("-------");
+        for(char s : optCP.toCharArray())
+        {
+            System.out.print("-- "+s);
+        }
+        System.out.println("---------");
         
         return fullCovCP.get(j);        
     }
@@ -327,6 +333,7 @@ public class Algo {
             ArrayList<ArrayList<Integer>> path = paths.get(k);
             CanPath c = new CanPath();
             double cpDist = 0;
+            double cpCamCount = 0;
             int j=0;
             Point.Double prev_py = null;
             Point.Double cur_px;
@@ -338,23 +345,31 @@ public class Algo {
                     sCP.append(i);
                 }                
                 CanPath cp = cpMap.get(sCP.toString());
+                if(cp == null)
+                    break;
                 for(VertCam v : cp.getcPath())
                 {
                     c.addVertCam(v);
+                    cpCamCount++;
                 }
                 cpDist += cp.getcpCovDist();
                 
                 if(j>0)
                 {
                     cur_px = cp.getStartPoint();
-                    cpDist += cur_px.distance(prev_py);//277.84263805014956 282.7630906181313
+                    cpDist += cur_px.distance(prev_py);
+                    cpCamCount += cur_px.distance(prev_py)/distB;
                 }
                 
                 prev_py = cp.getEndPoint();
                 j++;                
             }
-            c.setcpCovDist(cpDist);
-            cpCombo.add(c);
+            if(c!= null)
+            {
+                c.setcpCovDist(cpDist);
+                c.setCamCount(cpCamCount);
+                cpCombo.add(c);
+            }
         }
         
         //for path of dist cpDist
@@ -362,7 +377,8 @@ public class Algo {
         int startInd = group.get(0);
         BinaryPathSearch b = new BinaryPathSearch(startInd, group.size()-1);
         CanPath c = b.createCP(startInd, group.size()-1);
-        cpCombo.add(c);        
+        if(c!=null)
+            cpCombo.add(c);        
         
         return cpCombo;
     }

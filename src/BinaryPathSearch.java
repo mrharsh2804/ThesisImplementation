@@ -15,22 +15,24 @@ import java.awt.geom.Point2D;
  */
 public class BinaryPathSearch {
 
-//    public static void main(String[] args) {
-//        
-//        BinaryPathSearch b = new BinaryPathSearch(0,5);
-//        b.createCP(0,5);
-//    }
+    public static void main(String[] args) {
+        
+        BinaryPathSearch b = new BinaryPathSearch(4,1);
+        b.createCP(4,1);
+    }
 
     int vInd, cpDist; //start vertex
     Point.Double px1, py1, px2, py2;
     double y1, y2, x1, x2;
     double alpha;//  values in radians
     Point.Double next_px1;
-    int dec = 2;
+    int dec = 3;
     double prec = Math.pow(10, dec);
     double cpCovDist = 0;
+    double cpCamCount =0;
     int n = Algo.x.length;
     String ori = "gamma";
+    boolean debug = false;
 
     public BinaryPathSearch(int vInd, int cpDist) {
         Algo a = new Algo();
@@ -97,7 +99,7 @@ public class BinaryPathSearch {
         double distToNextV = py1.distance(Algo.vertex[(v+1)%n]); //py1 to v+1
         double remDist = distToNextV - Math.floor(distToNextV / Algo.distB) * Algo.distB; // total - dist covered by complete cams
         double li = distToNextV - remDist; // distance in between
-        cpCovDist += li;
+        //cpCovDist += li;
         next_px1 = Algo.pointAtDist(py1, Algo.vertex[(v+1)%n], li); // point on edge at li
         px1 = next_px1; //update current px1
         return remDist;
@@ -134,28 +136,30 @@ public class BinaryPathSearch {
             tempX1 = x1;
             //add first VertCam
             VertCam v = new VertCam(px1, py1, ori, vInd);
-            
-            if(true)//-1 == Algo.vertex.length-1)
+            if(debug)
+            //if(cpDist  == Algo.vertex.length-1)
             {
-            System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
-            System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
+                System.out.println("//"+ori+"\n"+"putMarker("+px1.getX()+","+px1.getY()+");");
+                System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
             }
+            ori = "gamma";
             c.addVertCam(v);
             
-            cpCovDist = x1+y1;
+            //cpCovDist = x1+y1;
             int k = 0;
             for (int i = vInd; i < vInd + cpDist; i++) {
                 k = i%n;
                 x1 = calcNextX1(k); //sets x1 and px1 for vertex[vInd+1]
                 y1 = calcY1((k+1)%n); //sets y1 and py1 for vertex[vInd+1]
                 //add VertCam for vInd+1
-                cpCovDist += x1+y1;
-                if(true)//-1 == Algo.vertex.length-1)
+                //cpCovDist += x1+y1;
+                if(debug)
+                //if(cpDist  == Algo.vertex.length-1)
                 {
-                    System.out.println("putMarker("+px1.getX()+","+px1.getY()+");");
+                    System.out.println("//"+ori+"\n"+"putMarker("+px1.getX()+","+px1.getY()+");");
                     System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
                 }
-                v = new VertCam(px1, py1, ori, (i+1)%n );
+                v = new VertCam(px1, py1, ori, (i+1)%n);
                 ori = "gamma";
                 c.addVertCam(v);
             }
@@ -178,8 +182,17 @@ public class BinaryPathSearch {
                 }
             }
             
-            //System.out.printf("%."+dec+"f : %."+dec+"f\n",tempX1,y2);
+            if(debug)
+            {
+                System.out.printf("//%."+dec+"f : %."+dec+"f\n",tempX1,y2);
+                System.out.print(count);
+            }
             count++;
+            if(count > 100000000)
+            {
+                //System.out.print("returning null\n");
+                return null;
+            }
         }
         
         
@@ -194,9 +207,6 @@ public class BinaryPathSearch {
             cpCovDist += Algo.vertex[i%n].distance(Algo.vertex[(i+1)%n]);
         }
         System.out.println((vInd+cpDist)%n+"-----------");
-        
-        
-        
         System.out.printf("%."+dec+"f : %."+dec+"f : %."+dec+"f\n",tempX1,y2, cpCovDist);
         
         //System.out.println(count);

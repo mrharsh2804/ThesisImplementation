@@ -38,7 +38,6 @@ public class CanPath {
     {
         cPath.add(v);
         cDist++;
-        cpCamCount++;
     }
     
     public Point.Double getEndPoint()
@@ -100,5 +99,10 @@ public class CanPath {
     public double getcpCamCount()
     {
         return cpCamCount;
+    }
+    
+    public void setCamCount(double c)
+    {
+        this.cpCamCount = (int)Math.ceil(c);
     }
 }
