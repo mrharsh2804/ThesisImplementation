@@ -11,7 +11,7 @@ public class CanPath {
     int cDist;
     String cpName;
     double cpCovDist;
-    int cpCamCount;
+    double cpCamCount;
 
     
     public CanPath()
@@ -103,6 +103,6 @@ public class CanPath {
     
     public void setCamCount(double c)
     {
-        this.cpCamCount = (int)Math.ceil(c);
+        this.cpCamCount = c;
     }
 }

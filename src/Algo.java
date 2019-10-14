@@ -11,8 +11,8 @@ import java.util.*;
 public class Algo {
     public static double[] vAngles; //in degrees
     public static double THETA = Math.toRadians(60);
-    public static double RANGE = 7;
-    public static double distL = 2;
+    public static double RANGE = 10;
+    public static double distL = 3;
     public static double alpha = Algo.THETA + Math.asin(Algo.distL/Algo.RANGE);
     public static double distA = 2 * Algo.RANGE * Math.sin(THETA/2) ;//sensor coverage when placed verticle.
     public static double beta = (Math.PI - THETA) / 2;
@@ -86,6 +86,7 @@ public class Algo {
     private void genPolyLength()
     {
         Point.Double p;
+        peri =0;
         for(int i = 1; i < vertex.length; i++)
         {
             p = vertex[i-1];
@@ -118,30 +119,36 @@ public class Algo {
                 {
                     fullCovCP.add(cp);
                 }
+                System.out.println("Number of Camera: "+ cp.getcpCamCount());
             }
         }
         
         //get the best path
-        double max = 0;
+        double min = -1;
         int j = 0;
         for(int i = 0; i < fullCovCP.size(); i++)
         {
             CanPath c = fullCovCP.get(i);
-            System.out.println("Number of Camera: "+ c.getcpCamCount());
-            if(max < fullCovCP.get(i).getcpCovDist())
+            //System.out.println("Number of Camera: "+ c.getcpCamCount());
+            if(min > fullCovCP.get(i).getcpCamCount())
             {
-                max = fullCovCP.get(i).getcpCovDist();
+                min = fullCovCP.get(i).getcpCamCount();
                 j=i;
             }
         }
+        
+        //to print the optimal path
         String optCP = fullCovCP.get(j).cpName;
-        System.out.print("-------");
+        System.out.print("\nOptimal Path : \n-----");
+        char c = '0';
         for(char s : optCP.toCharArray())
         {
-            System.out.print("-- "+s);
+            System.out.print("--> "+s);
+            c=s;
         }
-        System.out.println("---------");
-        
+        int l = Character.getNumericValue(c);
+        System.out.println("-->"+((l+1)%Algo.x.length)+"---------");
+        System.out.println(peri);
         return fullCovCP.get(j);        
     }
     
@@ -375,6 +382,7 @@ public class Algo {
                     Point.Double endP = c.getEndPoint();
                     double remDist = startP.distance(endP);
                     cpCamCount+=remDist/distB;
+                    cpDist += remDist;
                 }
                 c.setCamCount(cpCamCount);
                 cpCombo.add(c);

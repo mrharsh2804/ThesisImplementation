@@ -190,7 +190,7 @@ public class BinaryPathSearch {
                 System.out.print(count);
             }
             count++;
-            if(count > 100000000)
+            if(count > 1000000)
             {
                 //System.out.print("returning null\n");
                 return null;
@@ -208,11 +208,24 @@ public class BinaryPathSearch {
             System.out.print(i%n+", ");
             cpCovDist += Algo.vertex[i%n].distance(Algo.vertex[(i+1)%n]);
         }
-        System.out.println((vInd+cpDist)%n+"-----------");
-        System.out.printf("%."+dec+"f : %."+dec+"f : %."+dec+"f\n",tempX1,y2, cpCovDist);
+        
         
         //System.out.println(count);
         c.setcpCovDist(cpCovDist);
+        if(c.cDist == Algo.x.length)
+        {
+            Point.Double startP = c.getStartPoint();
+            Point.Double endP = c.getEndPoint();
+            double remDist = startP.distance(endP);
+            cpCamCount += remDist /Algo.distB;
+            cpCovDist += remDist;
+        }
+        System.out.print((vInd+cpDist)%n+", ");
+        if(c.cDist == Algo.x.length)
+        {
+            System.out.print((vInd+cpDist+1)%n);
+        }
+        System.out.printf("-----------\n"+"Total Coverage : %."+dec+"f\n",cpCovDist);
         c.setCamCount(cpCamCount);
                 
         return c;
