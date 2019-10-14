@@ -99,7 +99,8 @@ public class BinaryPathSearch {
         double distToNextV = py1.distance(Algo.vertex[(v+1)%n]); //py1 to v+1
         double remDist = distToNextV - Math.floor(distToNextV / Algo.distB) * Algo.distB; // total - dist covered by complete cams
         double li = distToNextV - remDist; // distance in between
-        //cpCovDist += li;
+        cpCamCount += li/Algo.distB;
+        
         next_px1 = Algo.pointAtDist(py1, Algo.vertex[(v+1)%n], li); // point on edge at li
         px1 = next_px1; //update current px1
         return remDist;
@@ -145,7 +146,7 @@ public class BinaryPathSearch {
             ori = "gamma";
             c.addVertCam(v);
             
-            //cpCovDist = x1+y1;
+            cpCamCount = 1;//for starting camera
             int k = 0;
             for (int i = vInd; i < vInd + cpDist; i++) {
                 k = i%n;
@@ -160,6 +161,7 @@ public class BinaryPathSearch {
                     System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
                 }
                 v = new VertCam(px1, py1, ori, (i+1)%n);
+                cpCamCount++;
                 ori = "gamma";
                 c.addVertCam(v);
             }
@@ -211,6 +213,8 @@ public class BinaryPathSearch {
         
         //System.out.println(count);
         c.setcpCovDist(cpCovDist);
+        c.setCamCount(cpCamCount);
+                
         return c;
     }
     

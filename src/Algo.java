@@ -121,6 +121,7 @@ public class Algo {
             }
         }
         
+        //get the best path
         double max = 0;
         int j = 0;
         for(int i = 0; i < fullCovCP.size(); i++)
@@ -318,8 +319,7 @@ public class Algo {
                 return cp;
         }
         
-        return null;     
-        
+        return null;        
     }
 
     private ArrayList<CanPath> createCPCombo(ArrayList<ArrayList<ArrayList<Integer>>> paths) {
@@ -345,12 +345,12 @@ public class Algo {
                     sCP.append(i);
                 }                
                 CanPath cp = cpMap.get(sCP.toString());
+                cpCamCount+= cp.getcpCamCount();
                 if(cp == null)
                     break;
                 for(VertCam v : cp.getcPath())
                 {
                     c.addVertCam(v);
-                    cpCamCount++;
                 }
                 cpDist += cp.getcpCovDist();
                 
@@ -367,6 +367,15 @@ public class Algo {
             if(c!= null)
             {
                 c.setcpCovDist(cpDist);
+                
+                //add cams for the last edge
+                if(c.cDist == Algo.x.length) //do it for last edge only
+                {
+                    Point.Double startP = c.getStartPoint();
+                    Point.Double endP = c.getEndPoint();
+                    double remDist = startP.distance(endP);
+                    cpCamCount+=remDist/distB;
+                }
                 c.setCamCount(cpCamCount);
                 cpCombo.add(c);
             }
