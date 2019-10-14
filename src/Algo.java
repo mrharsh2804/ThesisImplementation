@@ -119,7 +119,7 @@ public class Algo {
                 {
                     fullCovCP.add(cp);
                 }
-                System.out.println("Number of Camera: "+ cp.getcpCamCount());
+                System.out.println("Number of Camera: "+ (int)Math.ceil(cp.getcpCamCount())+"("+cp.getcpCamCount()+")");
             }
         }
         
