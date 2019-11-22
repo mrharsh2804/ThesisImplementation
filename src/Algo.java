@@ -1,6 +1,7 @@
 
 import java.awt.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -102,7 +103,7 @@ public class Algo {
     {
         //PathComb p = new PathComb();
         ArrayList<CanPath> fullCovCP = new ArrayList();
-        
+        boolean toggle = true;
         for(int i = 0 ; i <= vertex.length-1; i++) // for can path
         {
             for(int j = 0; j <= vertex.length-1; j++)//for vertices
@@ -110,16 +111,32 @@ public class Algo {
                 int[] verColc = generateArray(j,i);
                 
                 ArrayList<ArrayList<ArrayList<Integer>>> c = PathComb.getPaths(verColc);
+                
+                if(i == vertex.length -1)
+                    if(toggle)
+                    {
+                        System.out.println("\nRange: "+ Math.round(RANGE * 10) / 10+", Angle of view: "+Math.ceil(Math.round(Math.toDegrees(THETA)) * 10) / 10+", Min. dist: "+Math.round(distL * 10) / 10+"\n");
+                        toggle = false;
+                    }
                 ArrayList<CanPath> cpCombo = createCPCombo(c);
                 CanPath cp = checkForBestCP(cpCombo);
                 String sCP = parseGetPathsOP(cp);
+                System.out.print("Canonical Path Combination: ");
+                for(String s : cp.getPathPat())
+                {
+                    System.out.print("( ");
+                    for(char ch : s.toCharArray())                        
+                        System.out.print(ch+" ");
+                    System.out.print(')');
+                }
+                
                 cp.cpName = sCP;
                 cpMap.put(sCP, cp);
                 if(i == vertex.length-1)
                 {
                     fullCovCP.add(cp);
                 }
-                System.out.println("Number of Camera: "+ (int)Math.ceil(cp.getcpCamCount())+"("+cp.getcpCamCount()+")");
+                System.out.println("\nNumber of Camera: "+ (int)Math.ceil(cp.getcpCamCount())+"("+cp.getcpCamCount()+")");
             }
         }
         
@@ -148,7 +165,15 @@ public class Algo {
         }
         int l = Character.getNumericValue(c);
         System.out.println("-->"+((l+1)%Algo.x.length)+"---------");
-        System.out.println(peri);
+        System.out.print("Optimal Path Combination: ");
+        for(String s : fullCovCP.get(j).getPathPat())
+        {
+            System.out.print("( ");
+            for(char ch : s.toCharArray())                        
+                System.out.print(ch+" ");
+            System.out.print(')');
+        }
+        System.out.println();//peri);
         return fullCovCP.get(j);        
     }
     
@@ -301,7 +326,6 @@ public class Algo {
     }
 
     private String parseGetPathsOP(CanPath c) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         StringBuilder sCP = new StringBuilder();
         for(VertCam v : c.getcPath())
         {
@@ -311,7 +335,6 @@ public class Algo {
     }
 
     private CanPath checkForBestCP(ArrayList<CanPath> cpCombo) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         double max = 0;
         for(CanPath cp : cpCombo)
         {
@@ -350,7 +373,8 @@ public class Algo {
                 for(Integer i : group)
                 {
                     sCP.append(i);
-                }                
+                }             
+                c.addToPathPat(sCP.toString());
                 CanPath cp = cpMap.get(sCP.toString());
                 cpCamCount+= cp.getcpCamCount();
                 if(cp == null)
@@ -394,9 +418,13 @@ public class Algo {
         int startInd = group.get(0);
         BinaryPathSearch b = new BinaryPathSearch(startInd, group.size()-1);
         CanPath c = b.createCP(startInd, group.size()-1);
-        if(c!=null)
-            cpCombo.add(c);        
+        ArrayList<Integer> lPath = paths.get(paths.size()-1).get(0);
+        String s = lPath.stream().map(Object::toString).collect(Collectors.joining(""));
         
+        if(c!=null){
+            c.addToPathPat(s);
+            cpCombo.add(c);        
+        }
         return cpCombo;
     }
     

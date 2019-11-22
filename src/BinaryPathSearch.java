@@ -140,8 +140,8 @@ public class BinaryPathSearch {
             if(debug)
             //if(cpDist  == Algo.vertex.length-1)
             {
-                System.out.println("//"+ori+"\n"+"putMarker("+px1.getX()+","+px1.getY()+");");
-                System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
+                System.out.println("//"+ori+"\n"+"("+px1.getX()+","+px1.getY()+");");
+                System.out.println("("+py1.getX()+","+py1.getY()+");");
             }
             ori = "gamma";
             c.addVertCam(v);
@@ -157,8 +157,8 @@ public class BinaryPathSearch {
                 if(debug)
                 //if(cpDist  == Algo.vertex.length-1)
                 {
-                    System.out.println("//"+ori+"\n"+"putMarker("+px1.getX()+","+px1.getY()+");");
-                    System.out.println("putMarker("+py1.getX()+","+py1.getY()+");");
+                    System.out.println("//"+ori+"\n"+"("+px1.getX()+","+px1.getY()+");");
+                    System.out.println("("+py1.getX()+","+py1.getY()+");");
                 }
                 v = new VertCam(px1, py1, ori, (i+1)%n);
                 cpCamCount++;
@@ -190,7 +190,7 @@ public class BinaryPathSearch {
                 System.out.print(count);
             }
             count++;
-            if(count > 1000000)
+            if(count > 100000)
             {
                 //System.out.print("returning null\n");
                 return null;

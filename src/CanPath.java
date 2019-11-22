@@ -12,6 +12,7 @@ public class CanPath {
     String cpName;
     double cpCovDist;
     double cpCamCount;
+    ArrayList<String> pathPat;
 
     
     public CanPath()
@@ -20,8 +21,19 @@ public class CanPath {
         cDist = 0;
         cpCovDist = 0;
         cpCamCount =0;
+        pathPat = new ArrayList<>();
         //cpName = buildName();
     }
+    
+    public void addToPathPat(String s)
+    {
+        pathPat.add(s);
+    }
+    
+    public ArrayList<String> getPathPat()
+    {
+        return pathPat;
+    }            
     
     private String buildName()
     {
